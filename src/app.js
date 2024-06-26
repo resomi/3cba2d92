@@ -35,6 +35,10 @@ const buildTaskResult = (res, result) => {
   }
 };
 
+const getRandomSleepTime = (min = 0.5 * 60 * 1000, max = 1 * 60 * 1000) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 任务 1.签到 2.天天抽红包 3.自动备份抽红包
@@ -44,16 +48,16 @@ const doTask = async (cloudClient) => {
   result.push(
     `${res1.isSign ? "已经签到过了，" : ""}签到获得${res1.netdiskBonus}M空间`
   );
-  await delay(5000); // 延迟5秒
+  await delay(getRandomSleepTime());
 
   const res2 = await cloudClient.taskSign();
   buildTaskResult(res2, result);
 
-  await delay(5000); // 延迟5秒
+  await delay(getRandomSleepTime());
   const res3 = await cloudClient.taskPhoto();
   buildTaskResult(res3, result);
 
-  await delay(5000); // 延迟5秒
+  await delay(getRandomSleepTime());
   const res4 = await cloudClient.taskKJ();
   buildTaskResult(res4, result);
   return result;
@@ -195,12 +199,12 @@ const push = (title, desp) => {
 };
 
 // 开始执行程序
-async function main() {
+async function mainLogic() {
   for (let index = 0; index < accounts.length; index += 1) {
     const account = accounts[index];
     const { userName, password } = account;
     if (userName && password) {
-      const userNameInfo = mask(userName, 3, 7);
+      const userNameInfo = mask(userName, 3, 11);
       try {
         logger.log(`账户 ${userNameInfo}开始执行`);
         const cloudClient = new CloudClient(userName, password);
@@ -236,6 +240,13 @@ async function main() {
     }
   }
 }
+
+const main = async () => {
+  const sleepTime = getRandomSleepTime(1 * 60 * 1000, 10 * 60 * 1000);
+  logger.log(`将在 ${sleepTime / 1000 / 60} 分钟后开始执行签到任务`);
+  await delay(sleepTime);
+  await mainLogic();
+};
 
 (async () => {
   try {
