@@ -2,7 +2,7 @@ name: Cloud check in action
 on:
   workflow_dispatch:
   schedule:
-    - cron: 45 7 * * *
+    - cron: 15 1 * * *
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
