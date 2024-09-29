@@ -242,8 +242,8 @@ async function mainLogic() {
 }
 
 const main = async () => {
-  const sleepTime = getRandomSleepTime(1 * 60 * 1000, 10 * 60 * 1000);
-  logger.log(`将在 ${sleepTime / 1000 / 60} 分钟后开始执行签到任务`);
+  const sleepTime = getRandomSleepTime(1 * 60 * 1000, 2 * 60 * 1000);
+  logger.log(`将在 ${(sleepTime / 1000 / 60).toFixed(2)} 分钟后开始执行签到任务`);
   await delay(sleepTime);
   await mainLogic();
 };
